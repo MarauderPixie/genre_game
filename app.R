@@ -55,13 +55,8 @@ ui <- fluidPage(
       p("What's the genre of"),
       div(
         id = "song01",
-        h2(smpl$title[1])
-      ),
-      hidden(
-        div(
-          id = "song02",
-          h2(smpl$title[2])
-        )
+        # h2(smpl$title[1])
+        h2(textOutput("song_number"))
       ),
       p("?"),
       
@@ -69,7 +64,14 @@ ui <- fluidPage(
       actionButton("hphp", "Hip-Hop"),
       actionButton("pop", "Pop"),
       actionButton("metal", "Metal"),
-      actionButton("rock", "Rock")
+      actionButton("rock", "Rock"),
+      
+      verbatimTextOutput("cnt"),
+      verbatimTextOutput("hip"),
+      verbatimTextOutput("pop"),
+      verbatimTextOutput("mtl"),
+      verbatimTextOutput("rck"),
+      verbatimTextOutput("i")
     )
   )
   # )
@@ -87,15 +89,42 @@ server <- function(input, output, session) {
   observeEvent(input$start, {show("questionpage", anim = TRUE)})
   observeEvent(input$start, {show("song01", anim = TRUE)})
   
+  # observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+  #   if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
+  #     hide("song01", anim = TRUE)
+  #   }
+  # })
+  # observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+  #   if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
+  #     show("song02", anim = TRUE)
+  #   }
+  # })
+  
+  # for (i in length(smpl$title)){
+  #   song_num <- paste0("song0", i)
+  #   
+  #   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+  #     if (input$count == i | input$hphp == i | input$pop == i | input$metal == i | input$rock == i){
+  #       hide(song_num, anim = TRUE)
+  #     }
+  #   })
+  #   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+  #     if (input$count == i | input$hphp == i | input$pop == i | input$metal == i | input$rock == i){
+  #       show(song_num, anim = TRUE)
+  #     }
+  #   })
+  # }
+  
   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-    if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
-      hide("song01", anim = TRUE)
-    }
-  })
-  observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-    if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
-      show("song02", anim = TRUE)
-    }
+    i <- input$count + input$hphp + input$pop + input$metal + input$rock + 1
+    delay(100, output$song_number <- renderText(smpl$title[i]))
+    
+    output$i <- renderText(paste("counter i:", i))
+    output$cnt <- renderText(paste("Country:", input$count))
+    output$hip <- renderText(paste("HipHop: ", input$hphp))
+    output$pop <- renderText(paste("Pop:    ", input$pop))
+    output$mtl <- renderText(paste("Metal:  ", input$metal))
+    output$rck <- renderText(paste("Rock:   ", input$rock))
   })
 }
 
