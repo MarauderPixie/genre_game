@@ -48,18 +48,20 @@ ui <- fluidPage(
   ),
   
   hidden(
-    div(id = "song01",
-        align = "center",
-        
-        p("What's the genre of"),
-        h2(smpl$title[1]),
-        p("?"),
-        
-        actionButton("count", "Country"),
-        actionButton("hphp", "Hip-Hop"),
-        actionButton("pop", "Pop"),
-        actionButton("metal", "Metal"),
-        actionButton("rock", "Rock"))
+    div(
+      id = "song01",
+      align = "center",
+      
+      p("What's the genre of"),
+      h2(smpl$title[1]),
+      p("?"),
+      
+      actionButton("count", "Country"),
+      actionButton("hphp", "Hip-Hop"),
+      actionButton("pop", "Pop"),
+      actionButton("metal", "Metal"),
+      actionButton("rock", "Rock")
+    )
   )
   # )
 )
