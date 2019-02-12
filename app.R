@@ -21,17 +21,17 @@ ui <- fluidPage(
   theme = shinythemes::shinytheme("sandstone"),
   
   # Application title
-  titlePanel("Can you tell the genre of a song by it's name?"),
+  titlePanel(p("Can you tell the genre of a song by it's name?", align = "center")),
   
   hr(),
   
   # mainPanel(
   div(
-    id = "qpage",
+    id = "welcome",
     
     p("Most people have strong opinions about their favorite or least favorite musical genre or even
-         about genres in general. One way or another, music is often a strong identification device."),
-    p("But how different are musical genres actually in terms of language? How well are people able
+         about genres in general. One way or another, music is often a strong identification device. 
+         But how different are musical genres actually in terms of language? How well are people able
          to distinguish between them? Let's find out!"), br(),
     p("On the following pages, you will be presented a title of a song and we ask you to tell us what
          you think which genre that title comes from. There will be a total of 20 songs and afterwards
@@ -49,11 +49,20 @@ ui <- fluidPage(
   
   hidden(
     div(
-      id = "song01",
+      id = "questionpage",
       align = "center",
       
       p("What's the genre of"),
-      h2(smpl$title[1]),
+      div(
+        id = "song01",
+        h2(smpl$title[1])
+      ),
+      hidden(
+        div(
+          id = "song02",
+          h2(smpl$title[2])
+        )
+      ),
       p("?"),
       
       actionButton("count", "Country"),
@@ -74,8 +83,20 @@ server <- function(input, output, session) {
   #   onclick("start", toggle("qpage", anim = TRUE))
   # })
   
-  observeEvent(input$start, {hide("qpage", anim = TRUE)})
+  observeEvent(input$start, {hide("welcome", anim = TRUE)})
+  observeEvent(input$start, {show("questionpage", anim = TRUE)})
   observeEvent(input$start, {show("song01", anim = TRUE)})
+  
+  observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+    if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
+      hide("song01", anim = TRUE)
+    }
+  })
+  observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+    if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
+      show("song02", anim = TRUE)
+    }
+  })
 }
 
 
