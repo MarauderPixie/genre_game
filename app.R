@@ -3,7 +3,10 @@ library(shiny)
 # library(shinyWidgets)
 library(shinyjs)
 
-songs <- readRDS("data/songs.rds")
+songs <- readRDS("data/songs.rds") %>% 
+  mutate(
+    title = stringr::str_to_title(title)
+  )
 
 smpl <- songs %>% 
   group_by(genre) %>% 
@@ -46,7 +49,11 @@ ui <- fluidPage(
   
   hidden(
     div(id = "song01",
-        p("just some random song title"),
+        align = "center",
+        
+        p("What's the genre of"),
+        h2(smpl$title[1]),
+        p("?"),
         
         actionButton("count", "Country"),
         actionButton("hphp", "Hip-Hop"),
