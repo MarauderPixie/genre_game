@@ -8,6 +8,7 @@ songs <- readRDS("data/songs.rds") %>%
     title = stringr::str_to_title(title)
   )
 
+
 smpl <- songs %>% 
   group_by(genre) %>% 
   sample_n(4) %>% 
@@ -25,6 +26,7 @@ ui <- fluidPage(
   
   hr(),
   
+  ### welcome page ----
   # mainPanel(
   div(
     id = "welcome",
@@ -47,15 +49,17 @@ ui <- fluidPage(
     align = "center"
   ),
   
+  ## questioning page ----
   hidden(
     div(
       id = "questionpage",
       align = "center",
       
+      # I'll leave div-id "song01" in for now, in case I come up with a
+      # shinier version to display the title
       p("What's the genre of"),
       div(
         id = "song01",
-        # h2(smpl$title[1])
         h2(textOutput("song_number"))
       ),
       p("?"),
@@ -73,6 +77,21 @@ ui <- fluidPage(
       verbatimTextOutput("rck"),
       verbatimTextOutput("i")
     )
+  ),
+  
+  ## results page ----
+  hidden(
+    div(
+      id = "results",
+      align = "center",
+      
+      h2("You're done. Here are your results:"),
+      
+      h3("You were correct on X% of the titles."),
+      
+      p("here's a detailed table for you."),
+      p("Feel free to close the browser window anytime now.")
+    )
   )
   # )
 )
@@ -89,42 +108,33 @@ server <- function(input, output, session) {
   observeEvent(input$start, {show("questionpage", anim = TRUE)})
   observeEvent(input$start, {show("song01", anim = TRUE)})
   
-  # observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-  #   if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
-  #     hide("song01", anim = TRUE)
-  #   }
-  # })
-  # observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-  #   if (input$count == 1 | input$hphp == 1 | input$pop == 1 | input$metal == 1 | input$rock == 1){
-  #     show("song02", anim = TRUE)
-  #   }
-  # })
-  
-  # for (i in length(smpl$title)){
-  #   song_num <- paste0("song0", i)
-  #   
-  #   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-  #     if (input$count == i | input$hphp == i | input$pop == i | input$metal == i | input$rock == i){
-  #       hide(song_num, anim = TRUE)
-  #     }
-  #   })
-  #   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-  #     if (input$count == i | input$hphp == i | input$pop == i | input$metal == i | input$rock == i){
-  #       show(song_num, anim = TRUE)
-  #     }
-  #   })
-  # }
-  
+  # count button clicks, switch song and eventually pages
   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
     i <- input$count + input$hphp + input$pop + input$metal + input$rock + 1
     delay(100, output$song_number <- renderText(smpl$title[i]))
     
+    # for debugging purposes
     output$i <- renderText(paste("counter i:", i))
     output$cnt <- renderText(paste("Country:", input$count))
     output$hip <- renderText(paste("HipHop: ", input$hphp))
     output$pop <- renderText(paste("Pop:    ", input$pop))
     output$mtl <- renderText(paste("Metal:  ", input$metal))
     output$rck <- renderText(paste("Rock:   ", input$rock))
+    
+    # show results after 20 guesses
+    if (i > 20){
+      observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+        hide("questionpage", anim = TRUE)
+      })
+      
+      observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+        hide("song01", anim = TRUE)
+      })
+      
+      observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
+        show("results", anim = TRUE)
+      })
+    }
   })
 }
 
