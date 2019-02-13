@@ -8,13 +8,26 @@ songs <- readRDS("data/songs.rds") %>%
     title = stringr::str_to_title(title)
   )
 
+## function to... generate session data
+generate_session <- function(){
+  uid <- paste0(c(sample(LETTERS, 3), "_" ,sample(0:9, 9)), collapse = "")
+  ptf <- paste0("data/", uid, ".rds")
+  
+  smpl <- songs %>% 
+    group_by(genre) %>% 
+    sample_n(4) %>% 
+    ungroup() %>% 
+    mutate(
+      user = uid
+    )
+  
+  smpl <- smpl[sample(nrow(smpl)),]
+  
+  # saveRDS(smpl, ptf)
+  return(smpl)
+}
 
-smpl <- songs %>% 
-  group_by(genre) %>% 
-  sample_n(4) %>% 
-  ungroup()
-
-smpl <- smpl[sample(nrow(smpl)),]
+buttons <- c("count", "hphp", "pop", "metal", "rock")
 
 # Define UI for application ----
 ui <- fluidPage(
@@ -70,11 +83,7 @@ ui <- fluidPage(
       actionButton("metal", "Metal"),
       actionButton("rock", "Rock"),
       
-      verbatimTextOutput("cnt"),
-      verbatimTextOutput("hip"),
-      verbatimTextOutput("pop"),
-      verbatimTextOutput("mtl"),
-      verbatimTextOutput("rck"),
+      verbatimTextOutput("clicks"),
       verbatimTextOutput("i")
     )
   ),
@@ -98,11 +107,15 @@ ui <- fluidPage(
 
 
 
-# Define server logic
+# Define server logic ----
 server <- function(input, output, session) {
   # observe({
   #   onclick("start", toggle("qpage", anim = TRUE))
   # })
+  
+  reactive(input$start, {
+    generate_session()
+  })
   
   observeEvent(input$start, {hide("welcome", anim = TRUE)})
   observeEvent(input$start, {show("questionpage", anim = TRUE)})
@@ -115,11 +128,12 @@ server <- function(input, output, session) {
     
     # for debugging purposes
     output$i <- renderText(paste("counter i:", i))
-    output$cnt <- renderText(paste("Country:", input$count))
-    output$hip <- renderText(paste("HipHop: ", input$hphp))
-    output$pop <- renderText(paste("Pop:    ", input$pop))
-    output$mtl <- renderText(paste("Metal:  ", input$metal))
-    output$rck <- renderText(paste("Rock:   ", input$rock))
+    output$clicks <- renderText(paste("Country:", input$count, "\n",
+                                      "HipHop: ", input$hphp, "\n",
+                                      "Pop:    ", input$pop, "\n",
+                                      "Metal:  ", input$metal, "\n",
+                                      "Rock:   ", input$rock))
+    
     
     # show results after 20 guesses
     if (i > 20){
