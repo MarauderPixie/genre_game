@@ -18,7 +18,8 @@ generate_session <- function(){
     sample_n(4) %>% 
     ungroup() %>% 
     mutate(
-      user = uid
+      user  = uid,
+      guess = NA
     )
   
   smpl <- smpl[sample(nrow(smpl)),]
@@ -26,6 +27,7 @@ generate_session <- function(){
   # saveRDS(smpl, ptf)
   return(smpl)
 }
+
 
 buttons <- c("count", "hphp", "pop", "metal", "rock")
 
@@ -81,10 +83,12 @@ ui <- fluidPage(
       actionButton("hphp", "Hip-Hop"),
       actionButton("pop", "Pop"),
       actionButton("metal", "Metal"),
-      actionButton("rock", "Rock"),
+      actionButton("rock", "Rock")
       
-      verbatimTextOutput("clicks"),
-      verbatimTextOutput("i")
+      # verbatimTextOutput("clicks"),
+      # verbatimTextOutput("i"),
+      # tableOutput("tbl"),
+      # verbatimTextOutput("guess")
     )
   ),
   
@@ -112,9 +116,11 @@ server <- function(input, output, session) {
   # observe({
   #   onclick("start", toggle("qpage", anim = TRUE))
   # })
+  i = 1
   
   reactive(input$start, {
-    generate_session()
+    smpl <- generate_session()
+    smpl
   })
   
   observeEvent(input$start, {hide("welcome", anim = TRUE)})
@@ -124,16 +130,23 @@ server <- function(input, output, session) {
   # count button clicks, switch song and eventually pages
   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
     i <- input$count + input$hphp + input$pop + input$metal + input$rock + 1
-    delay(100, output$song_number <- renderText(smpl$title[i]))
+    output$song_number <- renderText(smpl$title[i])
     
     # for debugging purposes
-    output$i <- renderText(paste("counter i:", i))
-    output$clicks <- renderText(paste("Country:", input$count, "\n",
-                                      "HipHop: ", input$hphp, "\n",
-                                      "Pop:    ", input$pop, "\n",
-                                      "Metal:  ", input$metal, "\n",
-                                      "Rock:   ", input$rock))
+    # output$i <- renderText(paste("counter i:", i))
+    # output$clicks <- renderText(paste("Country:", input$count, "\n",
+    #                                   "HipHop: ", input$hphp, "\n",
+    #                                   "Pop:    ", input$pop, "\n",
+    #                                   "Metal:  ", input$metal, "\n",
+    #                                   "Rock:   ", input$rock))
     
+    ### TEST TEST TEST
+    
+    # guess <- c(guess, curr_guess())
+    # print(guess)
+    
+    # output$guess <- renderText(guess)
+    output$tbl <- renderTable(smpl)
     
     # show results after 20 guesses
     if (i > 20){
