@@ -122,6 +122,7 @@ server <- function(input, output, session) {
     generate_session()
   })
   
+
   cnt <- reactive({
     input$count
     if (input$count == 0) return(data.frame())
@@ -176,22 +177,22 @@ server <- function(input, output, session) {
     #                                   "Pop:    ", input$pop, "\n",
     #                                   "Metal:  ", input$metal, "\n",
     #                                   "Rock:   ", input$rock))
-    
+
     if (i() > 1 & i() <= 21) {
       cat(
         paste(smpl()$user[1], ',"',
-              smpl()$title[i()-1], '",',
-              smpl()$genre[i()-1], ",",
+              smpl()$title[i() - 1], '",',
+              smpl()$genre[i() - 1], ",",
               guess(), sep = ""),
         
-        file = paste0("data/", smpl()$user[i()-1], ".log"),
+        file = paste0("data/", smpl()$user[i() - 1], ".log"),
         sep = "\n",
         append = TRUE
       )
     }
     
     # show results after 20 guesses
-    if (i() > 20){
+    if (i() > 20) {
       results <- reactive({
         readr::read_csv(paste0("data/", smpl()$user[1],".log"), 
                         col_names = FALSE, col_types = readr::cols()) %>% 
