@@ -176,10 +176,10 @@ server <- function(input, output, session) {
     
     if (i() > 1 & i() <= 21) {
       cat(
-        paste(smpl()$user[i()-1], 
-              smpl()$title[i()-1], 
-              smpl()$genre[i()-1], 
-              guess(), sep = ","),
+        paste(smpl()$user[i()-1], ',"',
+              smpl()$title[i()-1], '",',
+              smpl()$genre[i()-1], ",",
+              guess(), sep = ""),
         
         file = paste0("data/", smpl()$user[i()-1], ".log"),
         sep = "\n",
