@@ -83,10 +83,10 @@ ui <- fluidPage(
       actionButton("hphp", "Hip-Hop"),
       actionButton("pop", "Pop"),
       actionButton("metal", "Metal"),
-      actionButton("rock", "Rock"),
+      actionButton("rock", "Rock")
       
       # verbatimTextOutput("clicks"),
-      verbatimTextOutput("i")
+      # verbatimTextOutput("i")
       # tableOutput("tbl"),
       # verbatimTextOutput("guess")
     )
@@ -103,6 +103,9 @@ ui <- fluidPage(
       h3(textOutput("perc")),
       
       p("here's a detailed table for you."),
+      
+      tableOutput("result_table"),
+      
       p("Feel free to close the browser window anytime now.")
     )
   )
@@ -191,15 +194,21 @@ server <- function(input, output, session) {
     if (i() > 20){
       results <- reactive({
         readr::read_csv(paste0("data/", smpl()$user[1],".log"), 
-                        col_names = FALSE, col_types = readr::cols())
+                        col_names = FALSE, col_types = readr::cols()) %>% 
+          rename("Title" = X2, "Genre" = X3, "Guess" = X4) %>% 
+          select(-X1)
       })
       
       perc <- reactive({
-        mean(results()$X3 == results()$X4) * 100
+        mean(results()$Genre == results()$Guess) * 100
       })
       
       output$perc <- renderText(
         paste0("You we're correct on ", perc(), "% of the titles.")
+      )
+      
+      output$result_table <- renderTable(
+        results()
       )
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
