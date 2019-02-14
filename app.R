@@ -203,11 +203,11 @@ server <- function(input, output, session) {
       )
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-        hide("questionpage", anim = TRUE)
+        hide("questionpage")
       })
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-        hide("song01", anim = TRUE)
+        hide("song01")
       })
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
