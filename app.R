@@ -37,7 +37,7 @@ ui <- fluidPage(
   theme = shinythemes::shinytheme("sandstone"),
   
   # Application title
-  titlePanel(p("Can you tell the genre of a song by it's name?", align = "center")),
+  h1("Can you tell the genre of a song by it's name?", align = "center"),
   
   hr(),
   
@@ -204,7 +204,7 @@ server <- function(input, output, session) {
       })
       
       output$perc <- renderText(
-        paste0("You we're correct on ", perc(), "% of the titles.")
+        paste0("You were correct on ", perc(), "% of the titles.")
       )
       
       output$result_table <- renderTable(
