@@ -100,7 +100,7 @@ ui <- fluidPage(
       
       h2("You're done. Here are your results:"),
       
-      h3("You were correct on X% of the titles."),
+      h3(textOutput("perc")),
       
       p("here's a detailed table for you."),
       p("Feel free to close the browser window anytime now.")
@@ -176,7 +176,7 @@ server <- function(input, output, session) {
     
     if (i() > 1 & i() <= 21) {
       cat(
-        paste(smpl()$user[i()-1], ',"',
+        paste(smpl()$user[1], ',"',
               smpl()$title[i()-1], '",',
               smpl()$genre[i()-1], ",",
               guess(), sep = ""),
@@ -189,6 +189,19 @@ server <- function(input, output, session) {
     
     # show results after 20 guesses
     if (i() > 20){
+      results <- reactive({
+        readr::read_csv(paste0("data/", smpl()$user[1],".log"), 
+                        col_names = FALSE, col_types = readr::cols())
+      })
+      
+      perc <- reactive({
+        mean(results()$X3 == results()$X4) * 100
+      })
+      
+      output$perc <- renderText(
+        paste0("You we're correct on ", perc(), "% of the titles.")
+      )
+      
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
         hide("questionpage", anim = TRUE)
       })
