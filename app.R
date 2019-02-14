@@ -83,10 +83,10 @@ ui <- fluidPage(
       actionButton("hphp", "Hip-Hop"),
       actionButton("pop", "Pop"),
       actionButton("metal", "Metal"),
-      actionButton("rock", "Rock")
+      actionButton("rock", "Rock"),
       
       # verbatimTextOutput("clicks"),
-      # verbatimTextOutput("i"),
+      verbatimTextOutput("i")
       # tableOutput("tbl"),
       # verbatimTextOutput("guess")
     )
@@ -113,43 +113,82 @@ ui <- fluidPage(
 
 # Define server logic ----
 server <- function(input, output, session) {
-  # observe({
-  #   onclick("start", toggle("qpage", anim = TRUE))
-  # })
-  i = 1
   
-  reactive(input$start, {
-    smpl <- generate_session()
-    smpl
+  smpl <- reactive({
+    input$start
+    generate_session()
   })
+  
+  cnt <- reactive({
+    input$count
+    if (input$count == 0) return(data.frame())
+    data.frame(genre = "Country", timestamp = Sys.time())
+  })
+  hip <- reactive({
+    input$hphp
+    if (input$hphp == 0) return(data.frame())
+    data.frame(genre = "Hip-Hop", timestamp = Sys.time())
+  })
+  pop <- reactive({
+    input$pop
+    if (input$pop == 0) return(data.frame())
+    data.frame(genre = "Pop", timestamp = Sys.time())
+  })
+  mtl <- reactive({
+    input$metal
+    if (input$metal == 0) return(data.frame())
+    data.frame(genre = "Metal", timestamp = Sys.time())
+  })
+  rck <- reactive({
+    input$rock
+    if (input$rock == 0) return(data.frame())
+    data.frame(genre = "Rock", timestamp = Sys.time())
+  })
+  
   
   observeEvent(input$start, {hide("welcome", anim = TRUE)})
   observeEvent(input$start, {show("questionpage", anim = TRUE)})
   observeEvent(input$start, {show("song01", anim = TRUE)})
   
+  
+  i <- reactive({
+    input$count + input$hphp + input$pop + input$metal + input$rock + 1
+  })
+  
+  guess <- reactive({
+    guesses <- rbind(cnt(), hip(), pop(), mtl(), rck())
+    guesses[guesses$timestamp == max(guesses$timestamp), "genre"]
+  })
+
+  
+  
   # count button clicks, switch song and eventually pages
   observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
-    i <- input$count + input$hphp + input$pop + input$metal + input$rock + 1
-    output$song_number <- renderText(smpl$title[i])
+    output$song_number <- renderText(smpl()$title[i()])
     
     # for debugging purposes
-    # output$i <- renderText(paste("counter i:", i))
+    # output$i <- renderText(paste("counter i:", i()))
     # output$clicks <- renderText(paste("Country:", input$count, "\n",
     #                                   "HipHop: ", input$hphp, "\n",
     #                                   "Pop:    ", input$pop, "\n",
     #                                   "Metal:  ", input$metal, "\n",
     #                                   "Rock:   ", input$rock))
     
-    ### TEST TEST TEST
-    
-    # guess <- c(guess, curr_guess())
-    # print(guess)
-    
-    # output$guess <- renderText(guess)
-    output$tbl <- renderTable(smpl)
+    if (i() > 1 & i() <= 21) {
+      cat(
+        paste(smpl()$user[i()-1], 
+              smpl()$title[i()-1], 
+              smpl()$genre[i()-1], 
+              guess(), sep = ","),
+        
+        file = paste0("data/", smpl()$user[i()-1], ".log"),
+        sep = "\n",
+        append = TRUE
+      )
+    }
     
     # show results after 20 guesses
-    if (i > 20){
+    if (i() > 20){
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
         hide("questionpage", anim = TRUE)
       })
