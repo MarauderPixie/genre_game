@@ -200,7 +200,7 @@ server <- function(input, output, session) {
       )
       
       output$result_table <- renderTable(
-        results()[-1]
+        results()[-1], striped = TRUE, hover = TRUE
       )
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
