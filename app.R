@@ -9,7 +9,7 @@ songs <- readRDS("data/songs.rds") %>%
   )
 
 ## function to... generate session data
-generate_session <- function(){
+generate_session <- function() {
   uid <- paste0(c(sample(LETTERS, 3), "_" ,sample(0:9, 9)), collapse = "")
   ptf <- paste0("data/", uid, ".rds")
   
@@ -38,12 +38,10 @@ ui <- fluidPage(
   
   # Application title
   h1("Can you tell the genre of a song by it's name?", align = "center"),
-  
   hr(),
   
   ### welcome page ----
-  fluidRow(
-    id = "welcome",
+  fluidRow(id = "welcome", align = "center",
     column(width = 10, offset = 1,
       p("Most people have strong opinions about their favorite or least favorite musical genre or even
            about genres in general. One way or another, music is often a strong identification device. 
@@ -62,53 +60,44 @@ ui <- fluidPage(
       p("Thanks for your help and have fun!"), 
       br(),
     actionButton("start", "Let's do it!")
-    ),
-    align = "center"
+    )
   ),
   
   ## questioning page ----
   hidden(
-    div(
-      id = "questionpage",
-      align = "center",
+    fluidRow(id = "questionpage", align = "center",
+      column(10, offset = 1,
       
       # I'll leave div-id "song01" in for now, in case I come up with a
       # shinier version to display the title
-      p("What's the genre of"),
-      div(
-        id = "song01",
-        h2(textOutput("song_number"))
-      ),
-      p("?"),
-      
-      actionButton("count", "Country"),
-      actionButton("hphp", "Hip-Hop"),
-      actionButton("pop", "Pop"),
-      actionButton("metal", "Metal"),
-      actionButton("rock", "Rock")
-      
-      # verbatimTextOutput("clicks"),
-      # verbatimTextOutput("i")
-      # tableOutput("tbl"),
-      # verbatimTextOutput("guess")
+        p("What's the genre of"),
+        h2(id = "song01", textOutput("song_number")),
+        p("?"),
+        
+        actionButton("count", "Country"),
+        actionButton("hphp", "Hip-Hop"),
+        actionButton("pop", "Pop"),
+        actionButton("metal", "Metal"),
+        actionButton("rock", "Rock")
+      )
     )
   ),
   
   ## results page ----
   hidden(
-    div(
-      id = "results",
-      align = "center",
+    fluidRow(id = "results", align = "center",
+      column(width = 10, offset = 1,
       
-      h2("You're done. Here are your results:"),
-      
-      h3(textOutput("perc")),
-      
-      p("here's a detailed table for you."),
-      
-      tableOutput("result_table"),
-      
-      p("Feel free to close the browser window anytime now.")
+        h2("You're done. Here are your results:"),
+
+        h3(textOutput("perc")),
+        
+        p("here's a detailed table for you."),
+        
+        tableOutput("result_table"),
+        
+        p("Feel free to close the browser window anytime now.")
+      )
     )
   )
 )
