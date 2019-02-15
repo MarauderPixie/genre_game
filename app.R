@@ -59,7 +59,7 @@ ui <- fluidPage(
       br(),
       p("Thanks for your help and have fun!"), 
       br(),
-    actionButton("start", "Let's do it!")
+      actionButton("start", "Let's do it!")
     )
   ),
   
