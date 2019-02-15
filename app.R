@@ -194,10 +194,11 @@ server <- function(input, output, session) {
     # show results after 20 guesses
     if (i() > 20) {
       results <- reactive({
-        readr::read_csv(paste0("data/", smpl()$user[1],".log"), 
-                        col_names = FALSE, col_types = readr::cols()) %>% 
-          rename("Title" = X2, "Genre" = X3, "Guess" = X4) %>% 
-          select(-X1)
+        logpath <- paste0("data/", smpl()$user[1],".log")
+        
+        read.csv(logpath, header = FALSE, 
+                 col.names = c("UID", "Title", "Genre", "Guess"),
+                 stringsAsFactors = FALSE)
       })
       
       perc <- reactive({
@@ -209,7 +210,7 @@ server <- function(input, output, session) {
       )
       
       output$result_table <- renderTable(
-        results()
+        results()[-1]
       )
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
