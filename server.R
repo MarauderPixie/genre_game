@@ -8,6 +8,19 @@ shinyServer(function(input, output, session) {
   })
   
   
+  i <- reactive({
+    input$count + input$hphp + input$pop + input$metal + input$rock + 1
+  })
+  
+  
+  nick <- reactive({
+    input$start
+    ifelse(input$nickname == "", 
+           paste0("Anonymous_Art_Smarty_", 
+                  length(list.files("data/"))-1), 
+           input$nickname)
+  })
+  
   cnt <- reactive({
     input$count
     if (input$count == 0) return(data.frame())
@@ -40,10 +53,6 @@ shinyServer(function(input, output, session) {
   observeEvent(input$start, {show("song01", anim = TRUE)})
   
   
-  i <- reactive({
-    input$count + input$hphp + input$pop + input$metal + input$rock + 1
-  })
-  
   guess <- reactive({
     guesses <- rbind(cnt(), hip(), pop(), mtl(), rck())
     guesses[guesses$timestamp == max(guesses$timestamp), "genre"]
@@ -66,6 +75,7 @@ shinyServer(function(input, output, session) {
     if (i() > 1 & i() <= 21) {
       cat(
         paste(smpl()$user[1], ',"',
+              nick(), '","',
               smpl()$title[i() - 1], '",',
               smpl()$genre[i() - 1], ",",
               guess(), sep = ""),
