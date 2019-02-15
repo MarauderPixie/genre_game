@@ -2,7 +2,6 @@
 
 library(dplyr)
 library(shiny)
-# library(shinyWidgets)
 library(shinyjs)
 
 songs <- readRDS("data/songs.rds") %>% 
@@ -10,7 +9,7 @@ songs <- readRDS("data/songs.rds") %>%
     title = stringr::str_to_title(title)
   )
 
-## function to... generate session data
+## function to generate session data
 generate_session <- function() {
   uid <- paste0(c(sample(LETTERS, 3), "_" ,sample(0:9, 9)), collapse = "")
   ptf <- paste0("data/", uid, ".rds")
@@ -31,5 +30,5 @@ generate_session <- function() {
 }
 
 
-buttons <- c("count", "hphp", "pop", "metal", "rock")
+# buttons <- c("count", "hphp", "pop", "metal", "rock")
 
