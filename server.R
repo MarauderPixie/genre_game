@@ -94,9 +94,19 @@ shinyServer(function(input, output, session) {
         paste0("You were correct on ", perc(), "% of the titles.")
       )
       
-      output$result_table <- renderTable(
-        results()[-1], striped = TRUE, hover = TRUE
-      )
+      output$result_table <- function() {
+        results() %>% 
+          select(-UID) %>% 
+          mutate(
+            Guess = cell_spec(Guess, color = "white", bold = TRUE,
+                              background = ifelse(Genre == Guess,
+                                                  "green",
+                                                  "red")),
+            Genre = cell_spec(Genre, color = "white", background = "#666666", bold = TRUE)
+          ) %>%
+          knitr::kable(escape = FALSE) %>% 
+          kable_styling("striped", full_width = FALSE)
+      }
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
         hide("questionpage")
