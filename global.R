@@ -3,6 +3,7 @@
 library(dplyr)
 library(shiny)
 library(shinyjs)
+library(kableExtra)
 
 songs <- readRDS("data/songs.rds") %>% 
   mutate(
