@@ -42,25 +42,27 @@ ui <- fluidPage(
   hr(),
   
   ### welcome page ----
-  # mainPanel(
-  div(
+  fluidRow(
     id = "welcome",
-    
-    p("Most people have strong opinions about their favorite or least favorite musical genre or even
-         about genres in general. One way or another, music is often a strong identification device. 
-         But how different are musical genres actually in terms of language? How well are people able
-         to distinguish between them? Let's find out!"), br(),
-    p("On the following pages, you will be presented a title of a song and we ask you to tell us what
-         you think which genre that title comes from. There will be a total of 20 songs and afterwards
-         you will get your results: on how many have you been correct, on which ones and what genre
-         does it actually belong to?"), br(),
-    p("No data other than your responses and a unique number will be stored. In no way will it be
-         possible to identify you at any point during or after the session. You're participation is 
-         completely voluntary."), br(),
-    p("Thanks for your help and have fun!"), br(),
-    
-    actionButton("start", "Let's do it!"),
-    
+    column(width = 10, offset = 1,
+      p("Most people have strong opinions about their favorite or least favorite musical genre or even
+           about genres in general. One way or another, music is often a strong identification device. 
+           But how different are musical genres actually in terms of language? How well are people able
+           to distinguish between them? Let's find out!"), 
+      br(),
+      p("On the following pages, you will be presented a title of a song and we ask you to tell us what
+           you think which genre that title comes from. There will be a total of 20 songs and afterwards
+           you will get your results: on how many have you been correct, on which ones and what genre
+           does it actually belong to?"), 
+      br(),
+      p("No data other than your responses and a unique number will be stored. In no way will it be
+           possible to identify you at any point during or after the session. You're participation is 
+           completely voluntary."), 
+      br(),
+      p("Thanks for your help and have fun!"), 
+      br(),
+    actionButton("start", "Let's do it!")
+    ),
     align = "center"
   ),
   
@@ -109,7 +111,6 @@ ui <- fluidPage(
       p("Feel free to close the browser window anytime now.")
     )
   )
-  # )
 )
 
 
