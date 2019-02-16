@@ -100,8 +100,18 @@ shinyServer(function(input, output, session) {
         mean(results()$Genre == results()$Guess) * 100
       })
       
+      if (grepl("Anonymous_Art_Smarty", nick())){
+        output$done <- renderText(
+          paste0("That's it! You're done.")
+        )
+      } else {
+        output$done <- renderText(
+          paste0("That's it, ", nick(), "! You're done.")
+        )
+      }
+      
       output$perc <- renderText(
-        paste0("So ", nick(), ", you were correct on ", perc(), "% of the titles.")
+        paste0("You were correct on ", perc(), "% of the titles.")
       )
       
       output$result_table <- function() {
