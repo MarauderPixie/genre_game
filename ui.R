@@ -13,22 +13,22 @@ shinyUI(
     fluidRow(id = "welcome", align = "center",
              column(width = 10, offset = 1,
                     p("Most people have strong opinions about their favorite or least favorite musical genre or even
-           about genres in general. One way or another, music is something manly people strongly identify with. 
-           But how different are musical genres actually in terms of language? How well are people able
-           to distinguish between these differences? Let's find out!"), 
+                       about genres in general. One way or another, music is something many people strongly identify with. 
+                       But how different are musical genres actually in terms of language? How well are people able
+                       to distinguish between these differences? Let's find out!"), 
                     br(),
                     p("On the following pages, you will be presented a title of a song and five genres and you select
-           the one you think that title belongs to. There will be a total of 20 songs. Afterwards
-           you will get your results: on how many have you been correct, on which ones and what genre
-           does it actually belong to?"), 
+                       the one you think that title belongs to. There will be a total of 20 songs. Afterwards
+                       you will get your results: on how many have you been correct, on which ones and what genre
+                       does it actually belong to?"), 
                     br(),
                     p("No data other than your responses and a unique number will be stored. In no way will it be
-           possible to identify you at any point during or after the session. You're participation is 
-           completely voluntary."), 
+                       possible to identify you at any point during or after the session. You're participation is 
+                       completely voluntary."), 
                     p("Only if you want to you can enter a nickname in the field below so you can brag about your
-           exceptional knowledge and precision - should you make it into the leaderboard."),
+                      exceptional knowledge and precision - should you make it into the leaderboard."),
                     br(),
-                    textInput("nickname", "Your nickname:", placeholder = "leave emty if not interested"), 
+                    textInput("nickname", "Your nickname:", placeholder = "Leave empty if not interested"), 
                     br(),
                     p("Thanks for taking part and have fun!"), 
                     br(),
