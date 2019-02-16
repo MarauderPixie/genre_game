@@ -61,11 +61,11 @@ shinyUI(
       fluidRow(id = "results", align = "center",
                column(width = 10, offset = 1,
                       
-                      h2("You're done. Here are your results:"),
+                      h2(textOutput("done")),
                       
                       h3(textOutput("perc")),
                       
-                      p("here's a detailed table for you."),
+                      p("And here's a detailed table for you:"),
                       
                       tableOutput("result_table"),
                       
