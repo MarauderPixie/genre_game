@@ -4,6 +4,8 @@ library(dplyr)
 library(shiny)
 library(shinyjs)
 library(kableExtra)
+if (!("ulid" %in% installed.packages())) remotes::install_github("hrbrmstr/ulid")
+library(ulid)
 
 songs <- readRDS("data/songs.rds") %>% 
   mutate(
@@ -12,7 +14,7 @@ songs <- readRDS("data/songs.rds") %>%
 
 ## function to generate session data
 generate_session <- function() {
-  uid <- paste0(c(sample(LETTERS, 3), "_" ,sample(0:9, 9)), collapse = "")
+  uid <- ulid_generate(1)
   ptf <- paste0("data/", uid, ".rds")
   
   smpl <- songs %>% 
