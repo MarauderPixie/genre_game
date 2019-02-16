@@ -17,7 +17,7 @@ shinyServer(function(input, output, session) {
     input$start
     ifelse(input$nickname == "", 
            paste0("Anonymous_Art_Smarty_", 
-                  length(list.files("data/"))-1), 
+                  length(list.files("data/")) - 1), 
            input$nickname)
   })
   
@@ -101,7 +101,7 @@ shinyServer(function(input, output, session) {
       })
       
       output$perc <- renderText(
-        paste0("You were correct on ", perc(), "% of the titles.")
+        paste0("So ", nick(), ", you were correct on ", perc(), "% of the titles.")
       )
       
       output$result_table <- function() {
@@ -114,8 +114,10 @@ shinyServer(function(input, output, session) {
                                                   "red")),
             Genre = cell_spec(Genre, color = "white", background = "#666666", bold = TRUE)
           ) %>%
+          select(-Nick) %>%
           knitr::kable(escape = FALSE) %>% 
-          kable_styling("striped", full_width = FALSE)
+          kable_styling("striped", full_width = FALSE) %>%
+          column_spec(column = c(2, 3), width = 10)
       }
       
       observeEvent(input$count | input$hphp | input$pop | input$metal | input$rock, {
