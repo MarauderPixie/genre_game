@@ -92,7 +92,7 @@ shinyServer(function(input, output, session) {
         logpath <- paste0("data/", smpl()$user[1],".log")
         
         read.csv(logpath, header = FALSE, 
-                 col.names = c("UID", "Title", "Genre", "Guess"),
+                 col.names = c("UID", "Nick", "Title", "Genre", "Guess"),
                  stringsAsFactors = FALSE)
       })
       
